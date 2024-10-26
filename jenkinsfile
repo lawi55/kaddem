@@ -1,0 +1,16 @@
+pipeline {
+    agent any
+    stages {
+        stage('Checkout GIT') {
+            steps {
+                echo 'Pulling...'
+                git branch: 'master', url: 'https://github.com/lawi55/gestion-station-ski'
+            }
+        }
+        stage('Testing Maven') {
+            steps {
+                sh 'mvn clean'
+            }
+        }
+    }
+}
