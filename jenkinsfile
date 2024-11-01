@@ -9,7 +9,7 @@ pipeline {
         }
         stage('Compile Code') {
             steps {
-                sh 'mvn compile'
+                sh 'mvn clean compile'
             }
         }
         stage('SonarQube Analysis') {
