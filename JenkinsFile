@@ -19,42 +19,19 @@
             }
         }
 
-          stage('MVN SonarQube') {
-            environment {
-                SONAR_TOKEN = credentials('SonarQube_Cred')
-            }
-            steps {
-              withCredentials([usernamePassword(credentialsId: 'SonarQube_Cred', passwordVariable: 'SONAR_PASSWORD', usernameVariable: 'SONAR_USERNAME')]) {
-                                sh '''
-                                mvn sonar:sonar \
-                                -Dsonar.host.url=http://192.168.50.4:9000 \
-                                -Dsonar.login=$SONAR_USERNAME \
-                                -Dsonar.password=$SONAR_PASSWORD
-                                '''
-              }
-            }
-        }
-
-         stage('Deploy') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'nexus-credentials', passwordVariable: 'NEXUS_PASSWORD', usernameVariable: 'NEXUS_USERNAME')]) {
-                    sh """
-                        echo "<settings>
-                            <servers>
-                                <server>
-                                    <id>deploymentRepo</id>
-                                    <username>${NEXUS_USERNAME}</username>
-                                    <password>${NEXUS_PASSWORD}</password>
-                                </server>
-                            </servers>
-                        </settings>" > ~/.m2/settings.xml
-
-                        mvn deploy -DskipTests \
-                        -DaltDeploymentRepository=deploymentRepo::default::http://192.168.50.4:8081/repository/maven-releases/
-                    """
-                }
-            }
-
+         stage('MVN SonarQube') {
+             environment {
+                 SONAR_TOKEN = credentials('SonarQube_Cred')
+             }
+             steps {
+                 sh '''
+                 mvn sonar:sonar \
+                 -Dsonar.host.url=http://192.168.50.4:9000 \
+                 -Dsonar.login=$SONAR_TOKEN
+                 '''
+             }
          }
+
+
     }
 }
