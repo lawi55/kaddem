@@ -21,16 +21,15 @@
 
           stage('MVN SonarQube') {
             environment {
-                SONAR_TOKEN = credentials('8625e95b-c8f5-42a0-af62-d16aa6e5b135')
+                SONAR_TOKEN = credentials('SonarQube_Cred')
             }
-            steps {
-                sh '''
-                    mvn sonar:sonar \
-              -Dsonar.projectKey=Kaddem \
-              -Dsonar.projectName='Kaddem' \
-              -Dsonar.host.url=http://192.168.50.4:9000 \
-              -Dsonar.token=$SONAR_TOKEN
-                '''
+              withCredentials([usernamePassword(credentialsId: 'SonarQube_Cred', passwordVariable: 'SONAR_PASSWORD', usernameVariable: 'SONAR_USERNAME')]) {
+                                sh '''
+                                mvn sonar:sonar \
+                                -Dsonar.host.url=http://192.168.50.4:9000 \
+                                -Dsonar.login=$SONAR_USERNAME \
+                                -Dsonar.password=$SONAR_PASSWORD
+                                '''
 
             }
         }
