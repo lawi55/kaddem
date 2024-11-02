@@ -23,6 +23,7 @@
             environment {
                 SONAR_TOKEN = credentials('SonarQube_Cred')
             }
+            steps {
               withCredentials([usernamePassword(credentialsId: 'SonarQube_Cred', passwordVariable: 'SONAR_PASSWORD', usernameVariable: 'SONAR_USERNAME')]) {
                                 sh '''
                                 mvn sonar:sonar \
@@ -30,7 +31,7 @@
                                 -Dsonar.login=$SONAR_USERNAME \
                                 -Dsonar.password=$SONAR_PASSWORD
                                 '''
-
+              }
             }
         }
 
