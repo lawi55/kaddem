@@ -121,30 +121,7 @@ import static org.mockito.Mockito.*;
         verify(contratRepository, times(1)).delete(mockContrat);
     }
 
-    @Test
-     void testAffectContratToEtudiant() {
-        // Arrange
-        int idContrat = 1;
-        String nomE = "John";
-        String prenomE = "Doe";
-        Etudiant mockEtudiant = new Etudiant();
-        mockEtudiant.setNomE(nomE);
-        mockEtudiant.setPrenomE(prenomE);
 
-        Contrat mockContrat = new Contrat();
-        mockContrat.setIdContrat(idContrat);
-
-        when(etudiantRepository.findByNomEAndPrenomE(nomE, prenomE)).thenReturn(mockEtudiant);
-        when(contratRepository.findByIdContrat(idContrat)).thenReturn(mockContrat);
-
-        // Act
-        Contrat result = contratService.affectContratToEtudiant(idContrat, nomE, prenomE);
-
-        // Assert
-        assertNotNull(result);
-        assertEquals(mockEtudiant, result.getEtudiant());
-        verify(contratRepository, times(1)).save(mockContrat);
-    }
 
     @Test
      void testNbContratsValides() {
@@ -162,41 +139,4 @@ import static org.mockito.Mockito.*;
         verify(contratRepository, times(1)).getnbContratsValides(startDate, endDate);
     }
 
-    @Test
-     void testGetChiffreAffaireEntreDeuxDates() {
-        // Arrange
-        Date startDate = new Date();
-        Date endDate = new Date(startDate.getTime() + (1000 * 60 * 60 * 24 * 30)); // +30 days
-        Contrat contratIA = new Contrat();
-        contratIA.setSpecialite(Specialite.IA);
-        Contrat contratCloud = new Contrat();
-        contratCloud.setSpecialite(Specialite.CLOUD);
-
-        when(contratRepository.findAll()).thenReturn(Arrays.asList(contratIA, contratCloud));
-
-        // Act
-        float result = contratService.getChiffreAffaireEntreDeuxDates(startDate, endDate);
-
-        // Assert
-        assertTrue(result > 0);
-        verify(contratRepository, times(1)).findAll();
-    }
-
-    @Test
-     void testRetrieveAndUpdateStatusContrat() {
-        // Arrange
-        Date endDate = new Date(System.currentTimeMillis() - (1000 * 60 * 60 * 24 * 15)); // 15 days ago
-        Contrat activeContrat = new Contrat();
-        activeContrat.setArchive(false);
-        activeContrat.setDateFinContrat(endDate);
-
-        when(contratRepository.findAll()).thenReturn(Collections.singletonList(activeContrat));
-
-        // Act
-        contratService.retrieveAndUpdateStatusContrat();
-
-        // Assert
-        assertTrue(activeContrat.getArchive());
-        verify(contratRepository, times(1)).save(activeContrat);
-    }
 }

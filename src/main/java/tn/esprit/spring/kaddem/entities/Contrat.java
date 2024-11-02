@@ -4,8 +4,13 @@ import lombok.ToString;
 
 import java.io.Serializable;
 import java.util.Date;
+import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
-import javax.persistence.*;
+import java.util.List;
+//import javax.persistence.*;
 
 @Entity
 @ToString

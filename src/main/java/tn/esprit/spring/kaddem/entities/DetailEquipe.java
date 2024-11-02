@@ -1,8 +1,13 @@
 package tn.esprit.spring.kaddem.entities;
 
 import java.io.Serializable;
+import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
-import javax.persistence.*;
+import java.util.List;
+
 
 @Entity
 public class DetailEquipe implements Serializable{

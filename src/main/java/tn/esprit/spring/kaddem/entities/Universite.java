@@ -5,8 +5,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Set;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
+import java.util.List;
 @Entity
 public class Universite implements Serializable{
     @Id

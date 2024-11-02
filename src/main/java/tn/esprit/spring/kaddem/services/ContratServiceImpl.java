@@ -22,7 +22,7 @@ ContratRepository contratRepository;
 @Autowired
 	EtudiantRepository etudiantRepository;
 	public List<Contrat> retrieveAllContrats(){
-		return (List<Contrat>) contratRepository.findAll();
+		return contratRepository.findAll();
 	}
 
 	public Contrat updateContrat (Contrat  ce){
@@ -49,7 +49,7 @@ ContratRepository contratRepository;
 		Contrat ce=contratRepository.findByIdContrat(idContrat);
 		Set<Contrat> contrats= e.getContrats();
 		Integer nbContratssActifs=0;
-		if (contrats.size()!=0) {
+		if (!contrats.isEmpty()) {
 			for (Contrat contrat : contrats) {
 				if (((contrat.getArchive())!=null)&& ((contrat.getArchive())!=false))  {
 					nbContratssActifs++;
