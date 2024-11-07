@@ -29,5 +29,17 @@ pipeline {
                 sh 'docker build -t lawi55/kaddem:0.0.1 .'
             }
         }
+        stage('Push Docker Image to DockerHub') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials-id', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                    sh '''
+                        docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+                        docker tag lawi55/kaddem:0.0.1 lawi55/kaddem:latest
+                        docker push lawi55/kaddem:0.0.1
+                        docker push lawi55/kaddem::latest
+                    '''
+                }
+            }
+        }
     }
 }
