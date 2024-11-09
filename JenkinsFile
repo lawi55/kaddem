@@ -34,7 +34,7 @@
               }
             }
         }
-        stage('Run Tests') {
+        stage('JUnit/Mockito') {
                     steps {
                         sh 'mvn clean test -X'
                     }
