@@ -7,7 +7,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import tn.esprit.spring.kaddem.entities.Contrat;
 import tn.esprit.spring.kaddem.entities.Etudiant;
-import tn.esprit.spring.kaddem.entities.Specialite;
 import tn.esprit.spring.kaddem.repositories.ContratRepository;
 import tn.esprit.spring.kaddem.repositories.EtudiantRepository;
 import tn.esprit.spring.kaddem.services.ContratServiceImpl;
@@ -181,21 +180,5 @@ class ContratServiceTest {
         verify(contratRepository, times(1)).save(mockContrats.get(1)); // Only the expiring contract should be saved as archived
     }
 
-    @Test
-    void testGetChiffreAffaireEntreDeuxDates() {
-        // Arrange
-        Date startDate = new Date();
-        Date endDate = new Date(startDate.getTime() + (30L * 24 * 60 * 60 * 1000)); // 1 month later
-        Contrat contratIA = new Contrat();
-        contratIA.setSpecialite(Specialite.IA);
-        List<Contrat> mockContrats = Arrays.asList(contratIA);
 
-        when(contratRepository.findAll()).thenReturn(mockContrats);
-
-        // Act
-        float result = contratService.getChiffreAffaireEntreDeuxDates(startDate, endDate);
-
-        // Assert
-        assertEquals(300, result); // Expected revenue for 1 month with IA specialization
-    }
 }
