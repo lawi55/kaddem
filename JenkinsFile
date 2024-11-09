@@ -37,7 +37,7 @@
 
       stage('Deploy') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'nexus-credentials', passwordVariable: 'NEXUS_PASSWORD', usernameVariable: 'NEXUS_USERNAME')]) {
+                withCredentials([usernamePassword(credentialsId: 'deploymentRepo', passwordVariable: 'NEXUS_PASSWORD', usernameVariable: 'NEXUS_USERNAME')]) {
                     sh """
                         echo "<settings>
                             <servers>
