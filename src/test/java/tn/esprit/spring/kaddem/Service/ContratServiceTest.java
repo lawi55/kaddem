@@ -1,4 +1,4 @@
-package Service;
+package tn.esprit.spring.kaddem.Service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,7 +17,7 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
- class ContratServiceTest {
+class ContratServiceTest {
 
     @InjectMocks
     private ContratServiceImpl contratService;
@@ -28,13 +28,14 @@ import static org.mockito.Mockito.*;
     @Mock
     private EtudiantRepository etudiantRepository;
 
+
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
     }
 
     @Test
-   void testRetrieveAllContrats() {
+    void testRetrieveAllContrats() {
         // Arrange
         List<Contrat> mockContrats = Arrays.asList(new Contrat(), new Contrat());
         when(contratRepository.findAll()).thenReturn(mockContrats);
@@ -49,21 +50,7 @@ import static org.mockito.Mockito.*;
     }
 
     @Test
-     void testUpdateContrat() {
-        // Arrange
-        Contrat mockContrat = new Contrat();
-        when(contratRepository.save(mockContrat)).thenReturn(mockContrat);
-
-        // Act
-        Contrat result = contratService.updateContrat(mockContrat);
-
-        // Assert
-        assertNotNull(result);
-        verify(contratRepository, times(1)).save(mockContrat);
-    }
-
-    @Test
-     void testAddContrat() {
+    void testAddContrat() {
         // Arrange
         Contrat newContrat = new Contrat();
         when(contratRepository.save(newContrat)).thenReturn(newContrat);
@@ -77,7 +64,21 @@ import static org.mockito.Mockito.*;
     }
 
     @Test
-     void testRetrieveContrat() {
+    void testUpdateContrat() {
+        // Arrange
+        Contrat mockContrat = new Contrat();
+        when(contratRepository.save(mockContrat)).thenReturn(mockContrat);
+
+        // Act
+        Contrat result = contratService.updateContrat(mockContrat);
+
+        // Assert
+        assertNotNull(result);
+        verify(contratRepository, times(1)).save(mockContrat);
+    }
+
+    @Test
+    void testRetrieveContrat() {
         // Arrange
         int id = 1;
         Contrat mockContrat = new Contrat();
@@ -94,7 +95,7 @@ import static org.mockito.Mockito.*;
     }
 
     @Test
-     void testRetrieveContratNotFound() {
+    void testRetrieveContratNotFound() {
         // Arrange
         int id = 1;
         when(contratRepository.findById(id)).thenReturn(Optional.empty());
@@ -108,7 +109,7 @@ import static org.mockito.Mockito.*;
     }
 
     @Test
-     void testRemoveContrat() {
+    void testRemoveContrat() {
         // Arrange
         int id = 1;
         Contrat mockContrat = new Contrat();
@@ -121,10 +122,8 @@ import static org.mockito.Mockito.*;
         verify(contratRepository, times(1)).delete(mockContrat);
     }
 
-
-
     @Test
-     void testNbContratsValides() {
+    void testNbContratsValides() {
         // Arrange
         Date startDate = new Date();
         Date endDate = new Date();
@@ -139,4 +138,64 @@ import static org.mockito.Mockito.*;
         verify(contratRepository, times(1)).getnbContratsValides(startDate, endDate);
     }
 
+    @Test
+    void testAffectContratToEtudiant() {
+        // Arrange
+        String nomE = "Doe";
+        String prenomE = "John";
+        Integer idContrat = 1;
+        Etudiant mockEtudiant = new Etudiant();
+        mockEtudiant.setNomE(nomE);
+        mockEtudiant.setPrenomE(prenomE);
+        mockEtudiant.setContrats(new HashSet<>()); // Ensure the student has fewer than 5 active contracts
+
+        Contrat mockContrat = new Contrat();
+        mockContrat.setIdContrat(idContrat);
+
+        when(etudiantRepository.findByNomEAndPrenomE(nomE, prenomE)).thenReturn(mockEtudiant);
+        when(contratRepository.findByIdContrat(idContrat)).thenReturn(mockContrat);
+
+        // Act
+        Contrat result = contratService.affectContratToEtudiant(idContrat, nomE, prenomE);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(mockEtudiant, result.getEtudiant());
+        verify(contratRepository, times(1)).save(mockContrat);
+    }
+
+    @Test
+    void testRetrieveAndUpdateStatusContrat() {
+        // Arrange
+        List<Contrat> mockContrats = Arrays.asList(new Contrat(), new Contrat());
+        mockContrats.get(0).setDateFinContrat(new Date(System.currentTimeMillis() - (15L * 24 * 60 * 60 * 1000))); // 15 days ago
+        mockContrats.get(1).setDateFinContrat(new Date()); // today
+
+
+        when(contratRepository.findAll()).thenReturn(mockContrats);
+
+        // Act
+        contratService.retrieveAndUpdateStatusContrat();
+
+        // Assert
+        verify(contratRepository, times(1)).save(mockContrats.get(1)); // Only the expiring contract should be saved as archived
+    }
+
+    @Test
+    void testGetChiffreAffaireEntreDeuxDates() {
+        // Arrange
+        Date startDate = new Date();
+        Date endDate = new Date(startDate.getTime() + (30L * 24 * 60 * 60 * 1000)); // 1 month later
+        Contrat contratIA = new Contrat();
+        contratIA.setSpecialite(Specialite.IA);
+        List<Contrat> mockContrats = Arrays.asList(contratIA);
+
+        when(contratRepository.findAll()).thenReturn(mockContrats);
+
+        // Act
+        float result = contratService.getChiffreAffaireEntreDeuxDates(startDate, endDate);
+
+        // Assert
+        assertEquals(300, result); // Expected revenue for 1 month with IA specialization
+    }
 }

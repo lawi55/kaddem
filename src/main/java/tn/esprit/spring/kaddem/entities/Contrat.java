@@ -24,7 +24,7 @@ public class Contrat implements Serializable{
     private Date dateFinContrat;
     @Enumerated(EnumType.STRING)
     private Specialite specialite;
-    private Boolean archive;
+    private Boolean archive = false;
     private Integer montantContrat;
     @ManyToOne(cascade = CascadeType.ALL)
     private Etudiant etudiant;
