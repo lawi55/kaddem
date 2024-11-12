@@ -1,0 +1,15 @@
+package tn.esprit.spring.kaddem; ;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+
+@SpringBootTest
+@ActiveProfiles("test")
+class KaddemApplicationTest {
+
+    @Test
+    void contextLoads() {
+        // Test the context loading
+    }
+}
