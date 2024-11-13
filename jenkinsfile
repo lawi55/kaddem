@@ -39,7 +39,7 @@ pipeline {
                         docker push badisaloui/kaddem:latest
                     '''
                 }
-            }
+            } 
         }*/
     stage('Clean Up Previous Containers') {
             steps {
@@ -58,7 +58,6 @@ pipeline {
                         docker-compose down -v
                         docker-compose up -d
                         docker-compose ps
-                        docker-compose logs 806d7d75e458
                     '''
                 }
             }
