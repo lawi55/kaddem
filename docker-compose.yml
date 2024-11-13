@@ -37,7 +37,9 @@ services:
         "spring.jpa.properties.hibernate.dialect": "org.hibernate.dialect.MySQLDialect",
         "server.port": 8089,
         "server.servlet.context-path": "/kaddem",
-        "logging.level.org.springframework": "DEBUG"
+        "logging.level.org.springframework": "DEBUG",
+        "server.tomcat.use-native" : false
+
       }'
     stdin_open: true
     tty: true
