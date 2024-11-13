@@ -40,7 +40,7 @@ pipeline {
                     '''
                 }
             }
-        } */
+        }
         stage('Clean Up Previous Containers') {
             steps {
                 script {
@@ -53,24 +53,11 @@ pipeline {
             steps {
                 script {
                     sh '''
-                        pwd
-                        ls -la
-                        docker-compose down -v
                         docker-compose up -d
                         docker-compose ps
                     '''
                 }
             }
         } 
-        stage('Logs') {
-            steps {
-                script {
-                    // Removes all containers related to this project to avoid conflicts
-                    sh 'docker stop secondpipeline_app-kaddem_1'
-                    sh 'docker start secondpipeline_app-kaddem_1'
-                    sh 'docker logs secondpipeline_app-kaddem_1'
-                }
-            }
-        }
     }
 }
