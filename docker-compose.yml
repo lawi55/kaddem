@@ -18,8 +18,8 @@ services:
       timeout: 10s
       retries: 5
 
-  app-timesheet:
-#    container_name: tpfoyer_app_timesheet
+  app-kaddem:
+#    container_name: kaddem
     image: lawi55/kaddem:0.0.1
     depends_on:
       mysqldb:
