@@ -40,7 +40,7 @@ pipeline {
                     '''
                 }
             }
-        } 
+        } */
         stage('Clean Up Previous Containers') {
             steps {
                 script {
@@ -61,7 +61,7 @@ pipeline {
                     '''
                 }
             }
-        } */
+        } 
         stage('Logs') {
             steps {
                 script {
