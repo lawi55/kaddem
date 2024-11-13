@@ -40,7 +40,7 @@ pipeline {
                     '''
                 }
             }
-        }
+        }*/
     stage('Clean Up Previous Containers') {
             steps {
                 script {
@@ -62,7 +62,7 @@ pipeline {
                     '''
                 }
             }
-        } */
+        } 
         stage('Error logs') {
             steps {
                 sh 'docker-compose logs firstpipeline_app-kaddem_1'
