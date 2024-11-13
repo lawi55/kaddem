@@ -20,7 +20,7 @@ services:
 
   app-timesheet:
 #    container_name: tpfoyer_app_timesheet
-    image: lawi55/kaddem:0.0.1
+    image: badisaloui/kaddem:0.0.1
     depends_on:
       mysqldb:
         condition: service_healthy
