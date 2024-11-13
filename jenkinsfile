@@ -64,7 +64,7 @@ pipeline {
         } 
         stage('Error logs') {
             steps {
-                sh 'docker-compose logs firstpipeline_app-kaddem_1'
+                sh 'docker-compose logs 41d2081e9829'
             }
         }
     }
