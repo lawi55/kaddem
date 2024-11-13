@@ -29,12 +29,12 @@
                 }
 
 
-        stage('JUnit/Mockito') {
-                    steps {
-                                   sh 'mvn clean test -X'
-
-                    }
+            stage('JUnit/Mockito') {
+                steps {
+                    sh 'mvn clean test -Dsurefire.debug -X'
                 }
+            }
+
 
        stage('MVN SonarQube') {
             environment {
