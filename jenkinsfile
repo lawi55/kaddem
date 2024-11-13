@@ -41,5 +41,26 @@ pipeline {
                 }
             }
         }
+    stage('Clean Up Previous Containers') {
+            steps {
+                script {
+                    // Supprime tous les conteneurs liés à ce projet pour éviter des conflits
+                    sh 'docker-compose down -v || true'
+                }
+            }
+        }
+        stage('Run Docker Compose') {
+            steps {
+                script {
+                    sh '''
+                        pwd
+                        ls -la
+                        docker-compose down -v
+                        docker-compose up -d
+                        docker-compose ps
+                    '''
+                }
+            }
+        }
     }
 }
