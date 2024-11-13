@@ -1,41 +1,48 @@
-pipeline {
+
+
+ pipeline {
     agent any
 
     stages {
         stage('Checkout Code') {
             steps {
-                echo "Getting project from Git"
+                 echo " getting project from git "
                 git url: 'https://github.com/lawi55/kaddem', branch: 'imen'
             }
         }
 
         stage('Build Project') {
             steps {
-                sh 'mvn clean install'
+
+                sh 'mvn clean'
+                sh 'mvn compile'
             }
         }
 
+
         stage('JUnit/Mockito') {
-            steps {
-                sh 'mvn test -X'
-            }
-        }
-        stage('MVN SonarQube') {
+                    steps {
+                        sh 'mvn clean test -X'
+
+                    }
+                }
+
+       stage('MVN SonarQube') {
             environment {
                 SONAR_TOKEN = credentials('SonarQube_Cred')
             }
             steps {
-                sh '''
-                mvn sonar:sonar \
-                -Dsonar.host.url=http://192.168.50.4:9000 \
-                -Dsonar.login=$SONAR_TOKEN
-                '''
+              withCredentials([usernamePassword(credentialsId: 'SonarQube_Cred', passwordVariable: 'SONAR_PASSWORD', usernameVariable: 'SONAR_USERNAME')]) {
+                                sh '''
+                                mvn sonar:sonar \
+                                -Dsonar.host.url=http://192.168.50.4:9000 \
+                                -Dsonar.login=$SONAR_USERNAME \
+                                -Dsonar.password=$SONAR_PASSWORD
+                                '''
+              }
             }
         }
-
-
-
-        stage('Deploy') {
+      stage('Deploy') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'deploymentRepo', passwordVariable: 'NEXUS_PASSWORD', usernameVariable: 'NEXUS_USERNAME')]) {
                     sh """
@@ -51,11 +58,10 @@ pipeline {
 
                         mvn deploy -DskipTests \
                         -DaltDeploymentRepository=deploymentRepo::default::http://192.168.50.4:8081/repository/maven-releases/
-
-                        rm -f ~/.m2/settings.xml
                     """
                 }
             }
-        }
+
+         }
     }
 }
