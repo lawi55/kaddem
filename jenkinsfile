@@ -24,5 +24,43 @@ pipeline {
                 sh 'mvn deploy -DskipTests -DaltDeploymentRepository=deploymentRepo::default::http://192.168.33.10:8081/repository/maven-releases/'
             }
         }
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t lawi55/kaddem:0.0.1 .'
+            }
+        }
+        stage('Push Docker Image to DockerHub') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials-id', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                    sh '''
+                        docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+                        docker tag lawi55/kaddem:0.0.1 lawi55/kaddem:latest
+                        docker push lawi55/kaddem:0.0.1
+                        docker push lawi55/kaddem:latest
+                    '''
+                }
+            }
+        }
+    stage('Clean Up Previous Containers') {
+            steps {
+                script {
+                    // Supprime tous les conteneurs liés à ce projet pour éviter des conflits
+                    sh 'docker-compose down -v || true'
+                }
+            }
+        }
+        stage('Run Docker Compose') {
+            steps {
+                script {
+                    sh '''
+                        pwd
+                        ls -la
+                        docker-compose down -v
+                        docker-compose up -d
+                        docker-compose ps
+                    '''
+                }
+            }
+        }
     }
 }
