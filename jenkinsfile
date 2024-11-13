@@ -61,6 +61,14 @@ pipeline {
                     '''
                 }
             }
-        } 
+        }
+        stage('Logs') {
+            steps {
+                script {
+                    // Removes all containers related to this project to avoid conflicts
+                    sh 'docker-compose logs app-kaddem'
+                }
+            }
+        }
     }
 }
