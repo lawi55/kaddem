@@ -22,7 +22,7 @@
 
         stage('JUnit/Mockito') {
                     steps {
-                        sh 'mvn test -X'
+                        sh 'mvn clean test -X'
 
                     }
                 }
