@@ -29,7 +29,7 @@ pipeline {
                 sh 'docker build -t lawi55/kaddem:0.0.1 .'
             }
         }
-        stage('Push Docker Image to DockerHub') {
+        /* stage('Push Docker Image to DockerHub') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials-id', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                     sh '''
@@ -40,7 +40,7 @@ pipeline {
                     '''
                 }
             }
-        } 
+        } */
         stage('Clean Up Previous Containers') {
             steps {
                 script {
