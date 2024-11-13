@@ -46,6 +46,8 @@ pipeline {
                 script {
                     // Supprime tous les conteneurs liés à ce projet pour éviter des conflits
                     sh 'docker-compose down -v || true'
+                    sh 'docker-compose up -d'
+
                     sh 'docker-compose ps'
                 }
             }
