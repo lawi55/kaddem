@@ -18,7 +18,7 @@ services:
       timeout: 10s
       retries: 5
 
-  app-timesheet:
+  app-kaddem:
 #    container_name: tpfoyer_app_timesheet
     image: badisaloui/kaddem:0.0.1
     depends_on:
