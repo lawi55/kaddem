@@ -4,7 +4,7 @@ pipeline {
         stage('Checkout GIT') {
             steps {
                 echo 'Pulling...'
-                git branch: 'master', url: 'https://github.com/badisaloui/kaddem'
+                git branch: 'badis', url: 'https://github.com/lawi55/kaddem'
             }
         }
         stage('Compile Code') {
