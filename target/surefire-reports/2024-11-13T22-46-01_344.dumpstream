@@ -1,5 +1,0 @@
-# Created at 2024-11-13T22:46:01.503
-Boot Manifest-JAR contains absolute paths in classpath 'D:\Nouveau dossier (4)\kaddem\target\test-classes'
-Hint: <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
-'other' has different root
-
