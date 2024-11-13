@@ -4,7 +4,7 @@ pipeline {
         stage('Checkout GIT') {
             steps {
                 echo 'Pulling...'
-                git branch: 'master', url: 'https://github.com/lawi55/kaddem'
+                git branch: 'master', url: 'https://github.com/badisaloui/kaddem'
             }
         }
         stage('Compile Code') {
@@ -26,7 +26,7 @@ pipeline {
         }
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t lawi55/kaddem:0.0.1 .'
+                sh 'docker build -t badisaloui/kaddem:0.0.1 .'
             }
         }
         stage('Push Docker Image to DockerHub') {
@@ -34,9 +34,9 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials-id', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                     sh '''
                         docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-                        docker tag lawi55/kaddem:0.0.1 lawi55/kaddem:latest
-                        docker push lawi55/kaddem:0.0.1
-                        docker push lawi55/kaddem:latest
+                        docker tag badisaloui/kaddem:0.0.1 badisaloui/kaddem:latest
+                        docker push badisaloui/kaddem:0.0.1
+                        docker push badisaloui/kaddem:latest
                     '''
                 }
             }
