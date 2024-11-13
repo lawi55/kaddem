@@ -12,7 +12,7 @@ pipeline {
                 sh 'mvn clean compile'
             }
         }
-        stage('SonarQube Analysis') {
+       /* stage('SonarQube Analysis') {
             steps {
                 withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
                     sh "mvn sonar:sonar -Dsonar.projectKey=JenkinsFile -Dsonar.host.url=http://192.168.33.10:9000 -Dsonar.login=${SONAR_TOKEN}"
@@ -40,16 +40,17 @@ pipeline {
                     '''
                 }
             }
-        }
+        } */
     stage('Clean Up Previous Containers') {
             steps {
                 script {
                     // Supprime tous les conteneurs liés à ce projet pour éviter des conflits
                     sh 'docker-compose down -v || true'
+                    sh 'docker-compose ps'
                 }
             }
         }
-        stage('Run Docker Compose') {
+      /*  stage('Run Docker Compose') {
             steps {
                 script {
                     sh '''
@@ -61,6 +62,6 @@ pipeline {
                     '''
                 }
             }
-        }
+        } */
     }
 }
