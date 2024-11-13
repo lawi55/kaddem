@@ -64,7 +64,7 @@ pipeline {
         } 
         stage('Error logs') {
             steps {
-                sh 'docker-compose logs 41d2081e9829'
+                sh 'docker logs 41d2081e9829'
             }
         }
     }
