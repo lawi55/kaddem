@@ -31,7 +31,7 @@
 
             stage('JUnit/Mockito') {
                 steps {
-                    sh 'mvn clean test -Dsurefire.debug -X'
+                    sh 'mvn clean test'
                 }
             }
 
