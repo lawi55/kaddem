@@ -7,11 +7,10 @@
         stage('Checkout Code') {
             steps {
                  echo " getting project from git "
-                git url: 'https://github.com/lawi55/kaddem', branch: 'imen'
             }
         }
 
-         stage("Testing Maven") {
+        stage("Testing Maven") {
                     steps {
                         sh "mvn -version"
                     }
@@ -35,7 +34,7 @@
                 }
             }
 
-
+/*
        stage('MVN SonarQube') {
             environment {
                 SONAR_TOKEN = credentials('SonarQube_Cred')
@@ -71,6 +70,6 @@
                 }
             }
 
-         }
+         }*/
     }
 }
