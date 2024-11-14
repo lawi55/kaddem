@@ -80,26 +80,40 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    def customImageName = " imenimage"
+                    def customImageName = "imenimage"
                     // Extract the version from the pom.xml
                     def version = sh(script: "mvn help:evaluate -Dexpression=project.version -q -DforceStdout", returnStdout: true).trim()
 
                     // Build the Docker image, passing the version
-                       sh "docker build --build-arg VERSION=${version} -t $customImageName ."
+                    sh "docker build --build-arg VERSION=${version} -t ${customImageName}:${version} ."
                 }
             }
         }
 
-          stage('Push Docker Image') {
-                   steps {
-                       script {
-                           withCredentials([usernamePassword(credentialsId: 'docker-credentials', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
-                               sh "docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD"
-                               sh 'docker tag imenimage imenba/imenimage'
-                               sh 'docker push imenba/imenimage'
-                           }
-                       }
-                   }
-         }
+        stage('Push Docker Image') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'docker-credentials', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                        sh "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin"
+                        sh "docker tag imenimage imenba/imenimage"
+                        sh "docker push imenba/imenimage"
+                    }
+                }
+            }
+        }
+
+        stage('Docker Compose') {
+            steps {
+                sh 'docker compose down'
+                sh 'docker compose up -d --build'
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Bringing down Docker Compose services...'
+            sh 'docker compose down'
+        }
     }
 }
