@@ -88,7 +88,6 @@ pipeline {
                 }
             }
         }
-
         stage('Check and Start Grafana') {
             steps {
                 script {
