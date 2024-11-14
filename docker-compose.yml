@@ -38,7 +38,9 @@ services:
         "server.port": 8089,
         "server.servlet.context-path": "/kaddem",
         "logging.level.org.springframework": "DEBUG",
-        "server.tomcat.use-native" : false
+        "server.tomcat.use-native" : false,
+        "management.endpoints.web.exposure.include" : "prometheus",
+        "management.endpoint.prometheus.enabled" : true
 
       }'
     stdin_open: true
