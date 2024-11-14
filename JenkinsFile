@@ -50,6 +50,7 @@
               }
             }
 
+
       stage('Deploy') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'deploymentRepo', passwordVariable: 'NEXUS_PASSWORD', usernameVariable: 'NEXUS_USERNAME')]) {
