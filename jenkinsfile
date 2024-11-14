@@ -17,6 +17,7 @@ pipeline {
                 }
             }
         }
+
         stage('Security Scan: Nmap') {
             steps {
                 echo "Starting Nmap security scan..."
