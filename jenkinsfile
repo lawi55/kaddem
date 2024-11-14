@@ -7,6 +7,7 @@ pipeline {
                 git branch: 'louay', url: 'https://github.com/lawi55/kaddem'
             }
         }
+
         stage('Send Email Notification') {
             steps {
                 script {
