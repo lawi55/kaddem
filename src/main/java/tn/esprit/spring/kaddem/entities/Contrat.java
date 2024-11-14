@@ -1,11 +1,15 @@
 package tn.esprit.spring.kaddem.entities;
-
 import lombok.ToString;
 
 import java.io.Serializable;
 import java.util.Date;
+import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
-import javax.persistence.*;
+import java.util.List;
+//import javax.persistence.*;
 
 @Entity
 @ToString
@@ -19,7 +23,7 @@ public class Contrat implements Serializable{
     private Date dateFinContrat;
     @Enumerated(EnumType.STRING)
     private Specialite specialite;
-    private Boolean archive;
+    private Boolean archive = false;
     private Integer montantContrat;
     @ManyToOne(cascade = CascadeType.ALL)
     private Etudiant etudiant;
