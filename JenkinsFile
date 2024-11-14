@@ -80,25 +80,26 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
+                    def customImageName = " imenimage"
                     // Extract the version from the pom.xml
                     def version = sh(script: "mvn help:evaluate -Dexpression=project.version -q -DforceStdout", returnStdout: true).trim()
 
                     // Build the Docker image, passing the version
-                    sh "docker build --build-arg VERSION=${version} -t ${CUSTOM_IMAGE_NAME} ."
+                       sh "docker build --build-arg VERSION=${version} -t $customImageName ."
                 }
             }
         }
 
-        stage('Push Docker Image') {
-            steps {
-                script {
-                    withCredentials([usernamePassword(credentialsId: 'docker-credentials', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
-                        sh "docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD"
-                        sh "docker tag ${CUSTOM_IMAGE_NAME}:${version} ${DOCKER_REPO}/${CUSTOM_IMAGE_NAME}:${version}"
-                        sh "docker push ${DOCKER_REPO}/${CUSTOM_IMAGE_NAME}"
-                    }
-                }
-            }
-        }
+          stage('Push Docker Image') {
+                   steps {
+                       script {
+                           withCredentials([usernamePassword(credentialsId: 'docker-credentials', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                               sh "docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD"
+                               sh 'docker tag imenimage imenba/imenimage'
+                               sh 'docker push imenba/imenimage'
+                           }
+                       }
+                   }
+         }
     }
 }
