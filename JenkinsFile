@@ -34,7 +34,7 @@
                 }
             }
 
-/*
+
        stage('MVN SonarQube') {
             environment {
                 SONAR_TOKEN = credentials('SonarQube_Cred')
@@ -71,6 +71,6 @@
                 }
             }
 
-         }*/
+         }
     }
 }
