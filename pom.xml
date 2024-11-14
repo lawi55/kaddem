@@ -110,10 +110,4 @@
         </repository>
 
     </distributionManagement>
-    <repositories>
-        <repository>
-            <id>maven-releases</id>
-            <url>http://192.168.33.10:808/repository/maven-releases/</url> <!-- Optional: if you want to download from Nexus -->
-        </repository>
-    </repositories>
 </project>
