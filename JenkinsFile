@@ -1,10 +1,18 @@
 pipeline {
     agent any
 
+    environment {
+        SONAR_HOST_URL = 'http://192.168.50.4:9000'
+        NEXUS_REPO_URL = 'http://192.168.50.4:8081/repository/maven-releases/'
+        CUSTOM_IMAGE_NAME = 'imenimage'
+        DOCKER_REPO = 'imenba'
+    }
+
     stages {
         stage('Checkout Code') {
             steps {
-                echo "getting project from git"
+                echo "Getting project from Git"
+                checkout scm
             }
         }
 
@@ -20,19 +28,19 @@ pipeline {
             }
         }
 
-        stage('MVN COMPILE') {
+        stage('Maven Compile') {
             steps {
                 sh 'mvn compile'
             }
         }
 
-        stage('JUnit/Mockito') {
+        stage('JUnit/Mockito Tests') {
             steps {
                 sh 'mvn clean test'
             }
         }
 
-        stage('MVN SonarQube') {
+        stage('SonarQube Analysis') {
             environment {
                 SONAR_TOKEN = credentials('SonarQube_Cred')
             }
@@ -40,15 +48,15 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'SonarQube_Cred', passwordVariable: 'SONAR_PASSWORD', usernameVariable: 'SONAR_USERNAME')]) {
                     sh '''
                     mvn sonar:sonar \
-                    -Dsonar.host.url=http://192.168.50.4:9000 \
+                    -Dsonar.host.url=${SONAR_HOST_URL} \
                     -Dsonar.login=$SONAR_USERNAME \
                     -Dsonar.password=$SONAR_PASSWORD
                     '''
                 }
             }
-        } // Closing brace added for 'MVN SonarQube' stage
+        }
 
-        stage('Deploy') {
+        stage('Maven Deploy') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'deploymentRepo', passwordVariable: 'NEXUS_PASSWORD', usernameVariable: 'NEXUS_USERNAME')]) {
                     sh """
@@ -63,8 +71,32 @@ pipeline {
                         </settings>" > ~/.m2/settings.xml
 
                         mvn deploy -DskipTests \
-                        -DaltDeploymentRepository=deploymentRepo::default::http://192.168.50.4:8081/repository/maven-releases/
+                        -DaltDeploymentRepository=deploymentRepo::default::${NEXUS_REPO_URL}
                     """
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    // Extract the version from the pom.xml
+                    def version = sh(script: "mvn help:evaluate -Dexpression=project.version -q -DforceStdout", returnStdout: true).trim()
+
+                    // Build the Docker image, passing the version
+                    sh "docker build --build-arg VERSION=${version} -t ${CUSTOM_IMAGE_NAME}:${version} ."
+                }
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'docker-credentials', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                        sh "docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD"
+                        sh "docker tag ${CUSTOM_IMAGE_NAME}:${version} ${DOCKER_REPO}/${CUSTOM_IMAGE_NAME}:${version}"
+                        sh "docker push ${DOCKER_REPO}/${CUSTOM_IMAGE_NAME}:${version}"
+                    }
                 }
             }
         }
