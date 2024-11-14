@@ -11,7 +11,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="kaddem" target="17" />
+      <module name="kaddem" target="1.8" />
       <module name="voltix" target="17" />
     </bytecodeTargetLevel>
   </component>
