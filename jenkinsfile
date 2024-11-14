@@ -7,6 +7,22 @@ pipeline {
                 git branch: 'louay', url: 'https://github.com/lawi55/kaddem'
             }
         }
+        stage('Send Email Notification') {
+            steps {
+                script {
+                    // Envoi d'un email de notification
+                    mail to: 'louay.sejine@esprit.tn',
+                         subject: 'Jenkins Notification: Pipeline en cours..',
+                         body: 'Un nouveau pipeline est en cours d'éxecution !'
+                }
+            }
+        }
+        stage('Security Scan: Nmap') {
+            steps {
+                echo "Starting Nmap security scan..."
+                sh 'nmap -sT -p 1-65535 -v 192.168.33.10'
+            }
+        }
         stage('Compile Code') {
             steps {
                 sh 'mvn clean compile'
@@ -58,6 +74,32 @@ pipeline {
                     '''
                 }
             }
-        } 
+        }
+        stage('Check and Start Prometheus') {
+            steps {
+                script {
+                    def prometheusRunning = sh(script: 'docker ps -q -f name=prometheus', returnStdout: true).trim()
+                    if (prometheusRunning) {
+                        echo 'Prometheus is already running.'
+                    } else {
+                        echo 'Starting Prometheus container...'
+                        sh 'docker start prometheus'
+                    }
+                }
+            }
+        }
+        stage('Check and Start Grafana') {
+            steps {
+                script {
+                    def grafanaRunning = sh(script: 'docker ps -q -f name=grafana', returnStdout: true).trim()
+                    if (grafanaRunning) {
+                        echo 'Grafana is already running.'
+                    } else {
+                        echo 'Starting Grafana container...'
+                        sh 'docker start grafana'
+                    }
+                }
+            }
+        }
     }
 }
