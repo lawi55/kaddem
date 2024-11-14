@@ -4,12 +4,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-@SpringBootTest
-@ActiveProfiles("test")
-class KaddemApplicationTest {
 
+@SpringBootTest(classes = KaddemApplication.class)
+@ActiveProfiles("test")  // Only if "test" profile exists in your properties
+class KaddemApplicationTest {
     @Test
     void contextLoads() {
-        // Test the context loading
+        // Verifies that the application context loads successfully
     }
 }
