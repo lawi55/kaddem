@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  kaddem-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        VERSION: "0.0.1"  # Replace with the actual version if it changes
+        GROUP_ID: "tn.esprit.spring"
+        ARTIFACT_ID: "Kaddem"
+    environment:
+      - NEXUS_URL=http://192.168.33.10:8081  # Update this with your Nexus URL if it changes
+    ports:
+      - "8082:8082"  # Maps port 8082 of the container to 8082 on your host
+    depends_on:
+      - nexus
+
+  nexus:
+    image: sonatype/nexus3
+    container_name: nexus
+    ports:
+      - "8081:8081"  # Expose Nexus on port 8081
+    volumes:
+      - nexus-data:/nexus-data  # Persist Nexus data
+
+volumes:
+  nexus-data:
