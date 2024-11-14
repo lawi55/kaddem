@@ -95,7 +95,7 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: 'docker-credentials', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
                         sh "docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD"
                         sh "docker tag ${CUSTOM_IMAGE_NAME}:${version} ${DOCKER_REPO}/${CUSTOM_IMAGE_NAME}:${version}"
-                        sh "docker push ${DOCKER_REPO}/${CUSTOM_IMAGE_NAME}:${version}"
+                        sh "docker push ${DOCKER_REPO}/${CUSTOM_IMAGE_NAME}"
                     }
                 }
             }
