@@ -1,57 +1,54 @@
-
-
- pipeline {
+pipeline {
     agent any
 
     stages {
         stage('Checkout Code') {
             steps {
-                 echo " getting project from git "
+                echo "getting project from git"
             }
         }
 
         stage("Testing Maven") {
-                    steps {
-                        sh "mvn -version"
-                    }
-                }
-                stage("Testing JDK") {
-                    steps {
-                        sh "java -version"
-                    }
-                }
-
-                stage('MVN COMPILE') {
-                    steps {
-                        sh 'mvn compile'
-                    }
-                }
-
-
-            stage('JUnit/Mockito') {
-                steps {
-                    sh 'mvn clean test'
-                }
+            steps {
+                sh "mvn -version"
             }
+        }
 
+        stage("Testing JDK") {
+            steps {
+                sh "java -version"
+            }
+        }
 
-       stage('MVN SonarQube') {
+        stage('MVN COMPILE') {
+            steps {
+                sh 'mvn compile'
+            }
+        }
+
+        stage('JUnit/Mockito') {
+            steps {
+                sh 'mvn clean test'
+            }
+        }
+
+        stage('MVN SonarQube') {
             environment {
                 SONAR_TOKEN = credentials('SonarQube_Cred')
             }
             steps {
-              withCredentials([usernamePassword(credentialsId: 'SonarQube_Cred', passwordVariable: 'SONAR_PASSWORD', usernameVariable: 'SONAR_USERNAME')]) {
-                                sh '''
-                                mvn sonar:sonar \
-                                -Dsonar.host.url=http://192.168.50.4:9000 \
-                                -Dsonar.login=$SONAR_USERNAME \
-                                -Dsonar.password=$SONAR_PASSWORD
-                                '''
-              }
+                withCredentials([usernamePassword(credentialsId: 'SonarQube_Cred', passwordVariable: 'SONAR_PASSWORD', usernameVariable: 'SONAR_USERNAME')]) {
+                    sh '''
+                    mvn sonar:sonar \
+                    -Dsonar.host.url=http://192.168.50.4:9000 \
+                    -Dsonar.login=$SONAR_USERNAME \
+                    -Dsonar.password=$SONAR_PASSWORD
+                    '''
+                }
             }
+        } // Closing brace added for 'MVN SonarQube' stage
 
-
-      stage('Deploy') {
+        stage('Deploy') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'deploymentRepo', passwordVariable: 'NEXUS_PASSWORD', usernameVariable: 'NEXUS_USERNAME')]) {
                     sh """
@@ -70,7 +67,6 @@
                     """
                 }
             }
-
-         }
+        }
     }
 }
