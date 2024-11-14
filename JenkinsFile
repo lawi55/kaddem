@@ -84,7 +84,7 @@ pipeline {
                     def version = sh(script: "mvn help:evaluate -Dexpression=project.version -q -DforceStdout", returnStdout: true).trim()
 
                     // Build the Docker image, passing the version
-                    sh "docker build --build-arg VERSION=${version} -t ${CUSTOM_IMAGE_NAME}:${version} ."
+                    sh "docker build --build-arg VERSION=${version} -t ${CUSTOM_IMAGE_NAME} ."
                 }
             }
         }
