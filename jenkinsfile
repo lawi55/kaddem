@@ -12,8 +12,8 @@ pipeline {
                 script {
                     // Envoi d'un email de notification
                     mail to: 'louay.sejine@esprit.tn',
-                         subject: 'Jenkins Notification: Pipeline en cours..',
-                         body: 'Un nouveau pipeline est en cours d'éxecution !'
+                         subject: 'Jenkins Notification: Pipeline en cours...',
+                         body: 'Un nouveau pipeline est en cours d\'execution !'
                 }
             }
         }
@@ -100,5 +100,6 @@ pipeline {
                     }
                 }
             }
+        }
     }
 }
